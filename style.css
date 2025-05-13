@@ -1,0 +1,834 @@
+/* style.css - Complete */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #eef1f5; /* Light blue-gray background */
+  color: #333;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(
+    90deg,
+    #4a90e2 0%,
+    #50e3c2 100%
+  ); /* Blue to teal gradient */
+  color: #fff;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+header h1 i {
+  margin-right: 10px;
+}
+
+.main-container {
+  display: flex;
+  flex-grow: 1; /* Make main container take available space */
+  padding: 15px;
+  gap: 15px; /* Space between sidebar and content */
+}
+
+.sidebar {
+  width: 380px; /* Fixed width for sidebar, slightly wider */
+  min-width: 350px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow-y: auto; /* Scroll if content overflows */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.content-area {
+  flex-grow: 1; /* Content area takes remaining space */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.panel {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+}
+.panel h2 {
+  margin-top: 0;
+  font-size: 1.1em;
+  color: #4a90e2; /* Panel title color */
+  border-bottom: 1px solid #eef1f5;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.panel h2 i {
+  margin-right: 8px;
+}
+
+#map-container {
+  flex-grow: 1; /* Map takes available vertical space in content area */
+  min-height: 400px; /* Minimum height for map */
+}
+#map {
+  height: 100%; /* Fill map container */
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+}
+
+#log-container {
+  min-height: 200px;
+  max-height: 300px; /* Limit log height, make it scrollable */
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+}
+#log-output {
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 1px solid #eef1f5;
+  padding: 10px;
+  background-color: #f8fafc;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 0.85em;
+  white-space: pre-wrap;
+}
+
+.control-group {
+  margin-bottom: 15px;
+}
+.control-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+.control-group hr {
+  border: 0;
+  height: 1px;
+  background-color: #eef1f5;
+  margin: 15px 0;
+}
+
+button,
+select,
+input[type="text"],
+input[type="number"] {
+  padding: 8px 12px;
+  margin: 5px 2px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95em;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+}
+input[type="range"] {
+  width: calc(100% - 90px); /* Adjust width for label and value display */
+  vertical-align: middle;
+}
+select,
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+}
+
+button {
+  background-color: #4a90e2; /* Primary button color */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+button:hover {
+  background-color: #357abd; /* Darker shade on hover */
+}
+button i {
+  margin-right: 6px;
+}
+
+#btn-move-danger,
+.sos-button,
+#btn-child-respond-help {
+  background-color: #e74c3c;
+}
+#btn-move-danger:hover,
+.sos-button:hover,
+#btn-child-respond-help:hover {
+  background-color: #c0392b;
+}
+#btn-move-park,
+#btn-request-checkin {
+  background-color: #f39c12;
+}
+#btn-move-park:hover,
+#btn-request-checkin:hover {
+  background-color: #d35400;
+}
+#btn-move-home,
+#btn-child-respond-ok {
+  background-color: #2ecc71;
+}
+#btn-move-home:hover,
+#btn-child-respond-ok:hover {
+  background-color: #27ae60;
+}
+
+.status-panel p i,
+.panel p i {
+  margin-right: 5px;
+  color: #777;
+  width: 16px; /* Ensure consistent icon width */
+  text-align: center;
+}
+#battery-icon.fa-battery-empty {
+  color: red;
+}
+#battery-icon.fa-battery-quarter {
+  color: orange;
+}
+#battery-icon.fa-battery-half {
+  color: #f39c12;
+}
+#battery-icon.fa-battery-three-quarters {
+  color: #aed581;
+}
+#battery-icon.fa-battery-full {
+  color: #2ecc71;
+}
+
+/* Log Entry Styles */
+.log-entry {
+  padding: 3px 0;
+  border-bottom: 1px dotted #eef1f5;
+}
+.log-entry:last-child {
+  border-bottom: none;
+}
+.log-entry .timestamp {
+  color: #888;
+  margin-right: 5px;
+  font-size: 0.9em;
+}
+.log-entry .icon {
+  margin-right: 5px;
+  width: 16px;
+  text-align: center;
+}
+.log-entry.emergency {
+  color: #e74c3c;
+  font-weight: bold;
+  background-color: #ffebee;
+}
+.log-entry.emergency .icon {
+  color: #e74c3c;
+}
+.log-entry.alert {
+  color: #f39c12;
+  font-weight: 500;
+  background-color: #fff8e1;
+}
+.log-entry.alert .icon {
+  color: #f39c12;
+}
+.log-entry.info {
+  color: #3498db;
+  background-color: #e7f3fe;
+}
+.log-entry.info .icon {
+  color: #3498db;
+}
+.log-entry.success {
+  color: #2ecc71;
+  background-color: #e6f7ee;
+}
+.log-entry.success .icon {
+  color: #2ecc71;
+}
+.log-entry.action {
+  color: #8e44ad;
+  background-color: #f3e8f7;
+}
+.log-entry.action .icon {
+  color: #8e44ad;
+}
+
+.zone-undefined {
+  color: #777;
+  font-weight: bold;
+}
+.zone-green {
+  color: #2ecc71;
+  font-weight: bold;
+}
+.zone-orange {
+  color: #f39c12;
+  font-weight: bold;
+}
+.zone-red {
+  color: #e74c3c;
+  font-weight: bold;
+}
+.zone-unknown {
+  color: #555;
+  font-style: italic;
+}
+
+/* Select option colors for Zone Type dropdown */
+.zone-green-select {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
+.zone-orange-select {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+}
+.zone-red-select {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+/* Tab Navigation - Enhancements for Scrolling */
+.tab-nav {
+  display: flex;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  overflow-y: hidden; /* Hide vertical scrollbar if any */
+  white-space: nowrap; /* Keep tabs in a single line */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+  background-color: #e9ecef; /* Light background for the tab bar area */
+  border-radius: 4px 4px 0 0; /* Rounded top corners for the bar */
+  padding: 5px 0; /* Some padding for the scrollbar area */
+}
+
+.tab-link {
+  background-color: #f0f4f8;
+  color: #4a90e2;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 10px 18px; /* Slightly more padding for better click targets */
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-bottom-color 0.3s;
+  font-size: 0.9em;
+  margin-right: 2px;
+  flex-shrink: 0; /* Prevent tabs from shrinking when space is tight */
+  border-bottom: 3px solid transparent; /* Placeholder for active underline */
+  position: relative;
+}
+.tab-link:last-child {
+  margin-right: 0;
+}
+
+.tab-link:hover {
+  background-color: #dfe9f3;
+  color: #357abd;
+}
+
+.tab-link.active {
+  background-color: #fff;
+  color: #4a90e2;
+  font-weight: 600;
+  border-bottom-color: #4a90e2;
+}
+.tab-link i {
+  margin-right: 6px;
+}
+
+.tab-content {
+  display: none;
+  padding: 15px;
+  border: 1px solid #dde3ea;
+  border-top: none; /* Important if tab-nav handles top visual "border" */
+  border-radius: 0 0 6px 6px;
+  background-color: #fff;
+}
+.tab-content.active-tab {
+  display: block;
+}
+.tab-content h3 {
+  margin-top: 0;
+  color: #337ab7;
+  font-size: 1.1em;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #eee;
+  margin-bottom: 15px;
+}
+.tab-content h3 i {
+  margin-right: 8px;
+}
+.tab-content h4 {
+  margin-top: 12px;
+  margin-bottom: 8px;
+  font-size: 1em;
+  color: #495057;
+}
+.tab-content h4 i {
+  margin-right: 6px;
+  color: #007bff;
+}
+.tab-content p i {
+  margin-right: 6px;
+  color: #6c757d;
+  width: 16px;
+  text-align: center;
+}
+
+/* Zone Management specific styles */
+#custom-zones-list {
+  list-style-type: none;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+#custom-zones-list li {
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#custom-zones-list li:last-child {
+  border-bottom: none;
+}
+#custom-zones-list .no-zones {
+  color: #888;
+  font-style: italic;
+}
+#custom-zones-list .zone-name {
+  font-weight: bold;
+}
+#custom-zones-list .zone-type-badge {
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: white;
+  font-size: 0.8em;
+}
+.zone-green-bg {
+  background-color: #2ecc71 !important;
+  color: white !important;
+}
+.zone-orange-bg {
+  background-color: #f39c12 !important;
+  color: white !important;
+}
+.zone-red-bg {
+  background-color: #e74c3c !important;
+  color: white !important;
+}
+#custom-zones-list .delete-zone-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0 5px;
+}
+#btn-start-draw-zone.drawing {
+  background-color: #f0ad4e;
+}
+
+/* Settings specific styles */
+#SettingsTab .control-group label {
+  display: inline-block;
+  margin-left: 5px;
+  font-weight: normal;
+}
+#SettingsTab input[type="checkbox"] {
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+/* Child Selector Panel */
+#child-selector-panel {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+#child-selector {
+  width: calc(100% - 120px);
+  margin-right: 10px;
+}
+#btn-add-child-sim {
+  padding: 8px 10px;
+  width: 100px;
+}
+
+/* Incident Tab */
+#IncidentsTab label,
+#IncidentsTab input,
+#IncidentsTab select {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+#active-incidents-list {
+  list-style-type: none;
+  padding: 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+#active-incidents-list li {
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#active-incidents-list .incident-desc {
+  flex-grow: 1;
+  margin-left: 5px;
+}
+#active-incidents-list .incident-type-badge {
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: white;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+.incident-amberalert-bg {
+  background-color: #ffc107;
+  color: #333;
+}
+.incident-criminalactivity-bg {
+  background-color: #dc3545;
+  color: white;
+}
+.incident-otherwarning-bg {
+  background-color: #17a2b8;
+  color: white;
+}
+#active-incidents-list .delete-incident-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 0 5px;
+}
+.info-box,
+#active-timer-display,
+#incident-location-info {
+  font-style: italic;
+  color: #007bff;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #e7f3fe;
+  border-left: 3px solid #007bff;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Safety Timer */
+#safety-timer-duration,
+#safety-timer-message {
+  width: 100%;
+}
+
+/* Tamper Controls */
+.tamper-controls button {
+  background-color: #6c757d;
+}
+.tamper-controls button:hover {
+  background-color: #5a6268;
+}
+
+/* Multi-child map markers */
+.child-marker-divicon {
+  text-align: center;
+  font-weight: bold;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  width: 26px !important;
+  height: 26px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
+}
+.child-marker-divicon.selected-child-marker {
+  border-color: #ffeb3b;
+  transform: scale(1.25);
+  z-index: 1000 !important;
+}
+.child-marker-initial {
+  font-size: 14px;
+}
+.child-marker-divicon.geo-disabled-marker {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+/* Ring effect on marker */
+.ring-effect-icon {
+  animation: pulse 1s infinite;
+} /* Base class for JS to apply if needed for the bell */
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 100, 100, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(255, 100, 100, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 100, 100, 0);
+  }
+}
+
+/* Incident area on map */
+.incident-area-circle {
+  stroke: #ff0000;
+  stroke-opacity: 0.7;
+  stroke-width: 2;
+  fill: #ff0000;
+  fill-opacity: 0.1;
+  pointer-events: none;
+}
+/* Predicted path trace style */
+.predicted-path-trace {
+  pointer-events: auto;
+} /* Allow clicking on predicted path for popup */
+
+/* Leaflet Draw Customization */
+.leaflet-draw-toolbar a {
+  background-image: none !important;
+  background-size: auto !important;
+  background-color: #fff !important;
+  border: 1px solid #ccc !important;
+  color: #333 !important;
+}
+.leaflet-draw-toolbar a:hover {
+  background-color: #f4f4f4 !important;
+}
+.leaflet-draw-draw-rectangle:before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f044";
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Developer Tab Specific Styles */
+.sensor-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+.sensor-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 10px;
+}
+.sensor-item.full-width {
+  grid-column: 1 / -1;
+}
+.sensor-item h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 0.95em;
+  color: #495057;
+}
+.sensor-item h4 i {
+  margin-right: 5px;
+  color: #007bff;
+}
+.sensor-item p {
+  margin: 3px 0;
+  font-size: 0.85em;
+}
+.sensor-item p span {
+  font-weight: bold;
+  color: #28a745;
+}
+.compass-rose-container {
+  width: 80px;
+  height: 80px;
+  margin: 10px auto;
+  position: relative;
+}
+#compass-rose {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #adb5bd;
+  border-radius: 50%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><circle cx="40" cy="40" r="38" stroke="%23ced4da" stroke-width="1" fill="none"/><text x="36" y="15" font-size="10" fill="%236c757d">N</text><text x="36" y="70" font-size="10" fill="%236c757d">S</text><text x="8" y="44" font-size="10" fill="%236c757d">W</text><text x="65" y="44" font-size="10" fill="%236c757d">E</text></svg>');
+  background-size: cover;
+  position: relative;
+}
+#compass-needle {
+  width: 4px;
+  height: 35px;
+  background-color: red;
+  position: absolute;
+  left: calc(50% - 2px);
+  top: 5px;
+  transform-origin: bottom center;
+  border-radius: 2px 2px 0 0;
+  transition: transform 0.5s ease-out;
+}
+#compass-needle::after {
+  content: "";
+  width: 4px;
+  height: 35px;
+  background-color: #ccc;
+  position: absolute;
+  left: 0px;
+  top: 35px;
+  transform-origin: top center;
+  border-radius: 0 0 2px 2px;
+}
+.g-force-bar {
+  width: 100%;
+  height: 15px;
+  background-color: #e9ecef;
+  border-radius: 3px;
+  margin-top: 5px;
+  position: relative;
+  overflow: hidden;
+}
+#g-force-indicator {
+  height: 100%;
+  width: 0%;
+  background-color: #ffc107;
+  border-radius: 3px;
+  transition: width 0.2s ease-in-out;
+}
+.mic-level-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 60px;
+  padding: 5px;
+  border: 1px solid #e0e0e0;
+  background-color: #fdfdfd;
+  border-radius: 3px;
+  margin-top: 5px;
+}
+.mic-bar {
+  width: 8%;
+  background-color: #28a745;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.1s linear;
+}
+
+/* PathTracerV2 Tab specific styles */
+#PathTracerV2Tab .control-group button {
+  margin-bottom: 10px;
+}
+#PathTracerV2Tab #path-tracer-info p {
+  margin: 6px 0;
+  font-size: 0.9em;
+}
+#PathTracerV2Tab #path-tracer-info label {
+  margin-top: 10px;
+}
+#PathTracerV2Tab #btn-predict-path {
+  background-color: #5cb85c;
+}
+#PathTracerV2Tab #btn-predict-path:hover {
+  background-color: #4cae4c;
+}
+#PathTracerV2Tab #btn-toggle-geolocation {
+  background-color: #f0ad4e;
+}
+#PathTracerV2Tab #btn-toggle-geolocation:hover {
+  background-color: #ec971f;
+}
+
+/* Modal Styles - Robust Centering */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  /* Flexbox for centering */
+  display: none; /* Re-set to none, JS will change to flex */
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background-color: #fefefe;
+  padding: 25px;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.modal-content h2 {
+  margin-top: 0;
+  color: #e74c3c;
+}
+.modal-content h2.info {
+  color: #3498db;
+}
+.modal-content h2.emergency {
+  color: #e74c3c;
+}
+.modal-content p {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  flex-grow: 1;
+  text-align: left;
+  padding: 0 10px;
+}
+.close-button {
+  color: #aaa;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+#modal-actions {
+  margin-top: 15px;
+  text-align: center;
+}
+#modal-actions button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  min-width: 80px;
+}
+
+footer {
+  text-align: center;
+  padding: 1em;
+  background: #333;
+  color: #fff;
+  font-size: 0.9em;
+}

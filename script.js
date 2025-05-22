@@ -135,18 +135,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     closeModalButton.onclick = () => modal.style.display = "none"; modalOkButton.onclick = () => modal.style.display = "none";
     window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
-    window.openTab = function(evt, tabName) {
+    function openTab(evt, tabName) {
         document.querySelectorAll(".tab-content").forEach(tc => { tc.style.display = "none"; tc.classList.remove("active-tab"); });
         document.querySelectorAll(".tab-link").forEach(tl => tl.classList.remove("active"));
         const tabToOpen = document.getElementById(tabName);
         if(tabToOpen) { 
             tabToOpen.style.display = "block"; tabToOpen.classList.add("active-tab");
         }
-        if(evt && evt.currentTarget) evt.currentTarget.classList.add("active");
+        // If evt is null, it means the function is called directly, not from an event
+        // In this case, we find the corresponding tab-link and add 'active' class
+        if (evt && evt.currentTarget) {
+            evt.currentTarget.classList.add("active");
+        } else if (tabName) {
+            const currentTabLink = document.querySelector(`.tab-link[data-tab="${tabName}"]`);
+            if (currentTabLink) {
+                currentTabLink.classList.add("active");
+            }
+        }
         
         if (tabName === 'DeveloperTab' && currentChildId) updateDeveloperTabUI(currentChildId);
         if (tabName === 'PathTracerV2Tab' && currentChildId) updatePathTracerTabUI(currentChildId);
-    };
+    }
 
     // --- Child Management ---
     const childMarkerColors = ['#3498DB', '#E74C3C', '#2ECC71', '#F39C12', '#9B59B6', '#1ABC9C', '#34495E', '#E67E22'];
@@ -275,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getAppModeIcon(mode) { switch(mode) { case 'Battery Saver': return 'fa-leaf'; case 'High Vigilance': return 'fa-eye'; case 'EMERGENCY': return 'fa-exclamation-triangle'; default: return 'fa-cog'; } }
     function updateBatteryIcon(batteryLevel) { batteryIconEl.className = 'fas'; if (batteryLevel <= 10) batteryIconEl.classList.add('fa-battery-empty', 'danger'); else if (batteryLevel <= 25) batteryIconEl.classList.add('fa-battery-quarter', 'warning'); else if (batteryLevel <= 50) batteryIconEl.classList.add('fa-battery-half', 'ok'); else if (batteryLevel <= 85) batteryIconEl.classList.add('fa-battery-three-quarters', 'good'); else batteryIconEl.classList.add('fa-battery-full', 'good'); }
     function getSimulatedAddress(lat, lng) { const zoneInfo = getCurrentZoneInfo(lat, lng); if (zoneInfo) return zoneInfo.name; return "Open Area"; }
-    function calculateDirection(prevLat, prevLng, currentLat, currentLng) { if (prevLat === null || prevLng === null || (prevLat === currentLat && prevLng === currentLng)) return 'N/A'; const latDiff = currentLat - prevLat; const lngDiff = currentLng - prevLng; if (Math.abs(latDiff) < 0.00001 && Math.abs(lngDiff) < 0.00001) return (currentChildId && childStates[currentChildId]) ? childStates[currentChildId].direction : 'N/A'; const angle = Math.atan2(lngDiff, latDiff) * 180 / Math.PI; if (angle >= -22.5 && angle < 22.5) return 'North'; if (angle >= 22.5 && angle < 67.5) return 'North East'; if (angle >= 67.5 && angle < 112.5) return 'East'; if (angle >= 112.5 && angle < 157.5) return 'South East'; if (angle >= 157.5 || angle < -157.5) return 'South'; if (angle >= -157.5 && angle < -112.5) return 'South West'; if (angle >= -112.5 && angle < -67.5) return 'West'; if (angle >= -67.5 && angle < -22.5) return 'North West'; return 'N/A'; }
+    function calculateDirection(prevLat, prevLng, currentLat, currentLng) { if (prevLat === null || prevLng === null || (prevLat === currentLat && prevLng === currentLng)) return 'N/A'; const latDiff = currentLat - prevLat; const lngDiff = currentLng - prevLng; if (Math.abs(latDiff) < 0.00001 && Math.abs(lngDiff) < 0.00001) return 'N/A'; const angle = Math.atan2(lngDiff, latDiff) * 180 / Math.PI; if (angle >= -22.5 && angle < 22.5) return 'North'; if (angle >= 22.5 && angle < 67.5) return 'North East'; if (angle >= 67.5 && angle < 112.5) return 'East'; if (angle >= 112.5 && angle < 157.5) return 'South East'; if (angle >= 157.5 || angle < -157.5) return 'South'; if (angle >= -157.5 && angle < -112.5) return 'South West'; if (angle >= -112.5 && angle < -67.5) return 'West'; if (angle >= -67.5 && angle < -22.5) return 'North West'; return 'N/A'; }
     
     // --- Location History ---
     function recordLocationHistory(childId) { if (!childId || !childStates[childId] || childStates[childId].geolocationDisabled) return; const child = childStates[childId]; child.locationHistory.push([child.lat, child.lng]); if (child.locationHistory.length > child.MAX_HISTORY_POINTS) { child.locationHistory.shift(); } if (showHistory && childId === currentChildId) drawLocationHistory(childId); }
@@ -446,13 +455,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        let initialBearing = lastGeo.headingDegrees;
-        if (isNaN(parseFloat(initialBearing)) || initialBearing === null || initialBearing === undefined) {
+        let initialBearing;
+        if (typeof lastGeo.headingDegrees === 'number' && !isNaN(lastGeo.headingDegrees)) {
+            initialBearing = lastGeo.headingDegrees;
+        } else if (lastGeo.directionString && directionToAngleMap[lastGeo.directionString] !== undefined) {
             initialBearing = directionToAngleMap[lastGeo.directionString];
-        }
-        if (isNaN(parseFloat(initialBearing)) || initialBearing === null || initialBearing === undefined) {
-             initialBearing = Math.random() * 360; 
-             console.warn(`PathTracer V2: Bearing defaulted to random ${initialBearing.toFixed(0)} deg.`);
+        } else {
+            initialBearing = Math.random() * 360;
+            console.warn(`PathTracer V2: Bearing defaulted to random ${initialBearing.toFixed(0)} deg because headingDegrees and directionString were invalid.`);
         }
 
         const totalSegments = Math.max(5, Math.floor(durationMinutes / 2)); 
@@ -584,11 +594,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners ---
     btnAddChildSim.addEventListener('click', () => { const newChildName = prompt("Enter name for new child:", `Child ${nextChildSimId}`); if (newChildName && newChildName.trim() !== "") { const newId = createNewChildState(newChildName.trim()); updateChildSelectorUI(); if (newId) childSelector.value = newId; handleChildSelectionChange(); } });
     childSelector.addEventListener('change', handleChildSelectionChange);
-    btnUpdateProfile.addEventListener('click', () => { if (!currentChildId || !childStates[currentChildId]) return; const child = childStates[currentChildId]; const oldName = child.name; const newName = childNameInput.value.trim(); if (newName && newName !== oldName) { child.name = newName; addLog(`Profile for "${oldName}" to ${child.name}.`, 'success', 'fas fa-user-edit', currentChildId); updateChildSelectorUI(); handleChildSelectionChange(); } else if (!newName) { addLog("Name empty.", 'alert', 'fas fa-times-circle'); childNameInput.value = oldName; } });
+    btnUpdateProfile.addEventListener('click', () => { if (!currentChildId || !childStates[currentChildId]) return; const child = childStates[currentChildId]; const oldName = child.name; const newName = childNameInput.value.trim(); if (newName && newName !== oldName) { child.name = newName; addLog(`Profile for "${oldName}" to ${child.name}.`, 'success', 'fas fa-user-edit', currentChildId); updateChildSelectorUI(); } else if (!newName) { addLog("Name empty.", 'alert', 'fas fa-times-circle'); childNameInput.value = oldName; } });
     btnMoveHome.addEventListener('click', () => currentChildId && moveChildToPredefinedZone(currentChildId, 'home'));
     btnMovePark.addEventListener('click', () => currentChildId && moveChildToPredefinedZone(currentChildId, 'park'));
     btnMoveDanger.addEventListener('click', () => currentChildId && moveChildToPredefinedZone(currentChildId, 'danger'));
-    function moveChildToPredefinedZone(childId, zoneKey) { if (!childId || !childStates[childId] || !predefinedZones[zoneKey]) return; const targetZone = predefinedZones[zoneKey]; const center = targetZone.bounds.getCenter(); moveChild(childId, center.lat, center.lng, targetZone.name.split(' (')[0]); map.fitBounds(targetZone.bounds); }
+    function moveChildToPredefinedZone(childId, zoneKey) {
+        if (!childId || !childStates[childId]) {
+            // Optional: Log if childId or childStates[childId] is missing
+            // addLog(`Error: Invalid childId or child state for moving to predefined zone.`, 'alert', 'fas fa-user-times');
+            return; 
+        }
+        if (!predefinedZones[zoneKey]) {
+            addLog(`Error: Predefined zone with key "${zoneKey}" not found. Cannot move child.`, 'alert', 'fas fa-exclamation-triangle', childId);
+            return;
+        }
+        const targetZone = predefinedZones[zoneKey];
+        const center = targetZone.bounds.getCenter();
+        moveChild(childId, center.lat, center.lng, targetZone.name.split(' (')[0]);
+        map.fitBounds(targetZone.bounds);
+    }
     btnSetAltitude.addEventListener('click', () => { if (!currentChildId || !childStates[currentChildId]) return; const child = childStates[currentChildId]; const newAltitude = parseInt(altitudeInput.value); if (!isNaN(newAltitude)) { child.altitude = newAltitude; addLog(`Altitude set: ${newAltitude}m.`, 'action', 'fas fa-mountain', currentChildId); applyRules(currentChildId); } else { addLog("Invalid altitude.", 'alert', 'fas fa-times-circle', currentChildId); } });
     motionSelect.addEventListener('change', (e) => { if (!currentChildId || !childStates[currentChildId]) return; childStates[currentChildId].motion = e.target.value; addLog(`Motion: ${e.target.value}.`, 'info', getMotionIcon(e.target.value), currentChildId); applyRules(currentChildId); });
     batterySlider.addEventListener('input', (e) => { batteryValueDisplay.textContent = `${e.target.value}%`; });
@@ -660,11 +684,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialization ---
     function initializeApp() {
+        // Setup tab listeners
+        document.querySelectorAll(".tab-link").forEach(button => {
+            button.addEventListener('click', (event) => {
+                const tabName = event.currentTarget.getAttribute('data-tab');
+                openTab(event, tabName);
+            });
+        });
+
         const firstTabButton = document.querySelector(".tab-nav .tab-link"); 
         if(firstTabButton) {
-             const firstTabName = firstTabButton.getAttribute('onclick').match(/'([^']+)'/)[1];
+             const firstTabName = firstTabButton.getAttribute('data-tab'); // Changed to data-tab
              openTab(null, firstTabName); 
-             firstTabButton.classList.add('active');
+             // openTab will now handle adding 'active' class based on tabName when evt is null
         }
 
         globalSettings.lowBatteryThreshold = parseInt(lowBatteryThresholdInput.value);
